@@ -1,1 +1,1 @@
-# Paradigmas-de-Programa-o-T2
+# Trabalho 2 de ELC117 - Paradigmas de Programação
