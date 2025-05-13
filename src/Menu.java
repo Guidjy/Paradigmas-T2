@@ -24,7 +24,7 @@ public class Menu {
                 switch (opcao) {
                     case 1 -> submenuCadastro();
                     case 2 -> submenuAlterar();
-                    case 3 -> System.out.println("Função de exclusão ainda não implementada.");
+                    case 3 -> submenuExcluir();
                     case 4 -> System.out.println("Função de busca ainda não implementada.");
                     case 5 -> verClassificacao();
                     case 6 -> {
@@ -234,5 +234,75 @@ public class Menu {
             default -> System.out.println("Opção inválida.");
         }
     }
+
+    private static void submenuExcluir() throws SQLException {
+        System.out.println("\n--- Submenu Excluir ---");
+        System.out.println("1. Excluir time");
+        System.out.println("2. Excluir treinador");
+        System.out.println("3. Excluir jogador");
+        System.out.println("4. Excluir partida");
+        System.out.print("Escolha uma opção: ");
+        int opcao = scanner.nextInt();
+        scanner.nextLine();
+
+        switch (opcao) {
+            case 1 -> {
+                System.out.print("Nome do time a deletar: ");
+                String nome = scanner.nextLine();
+                TimesDAO dao = new TimesDAO();
+                var lista = dao.buscarPorNome(nome);
+                if (!lista.isEmpty()) {
+                    int id = lista.getFirst().getId();
+                    dao.deletar(id);
+                    System.out.println("Time excluído com sucesso!");
+                } else {
+                    System.out.println("Time não encontrado.");
+                }
+            }
+            case 2 -> {
+                System.out.print("Nome do treinador a deletar: ");
+                String nome = scanner.nextLine();
+                TreinadoresDAO dao = new TreinadoresDAO();
+                var lista = dao.buscarPorNome(nome);
+                if (!lista.isEmpty()) {
+                    int id = lista.getFirst().getId();
+                    dao.deletar(id);
+                    System.out.println("Treinador excluído com sucesso!");
+                } else {
+                    System.out.println("Treinador não encontrado.");
+                }
+            }
+            case 3 -> {
+                System.out.print("Nome do jogador a deletar: ");
+                String nome = scanner.nextLine();
+                JogadoresDAO dao = new JogadoresDAO();
+                var lista = dao.buscarPorNome(nome);
+                if (!lista.isEmpty()) {
+                    int id = lista.getFirst().getId();
+                    dao.deletar(id);
+                    System.out.println("Jogador excluído com sucesso!");
+                } else {
+                    System.out.println("Jogador não encontrado.");
+                }
+            }
+            case 4 -> {
+                System.out.print("Nome do time da casa: ");
+                String nomeCasa = scanner.nextLine();
+                System.out.print("Nome do time visitante: ");
+                String nomeVisitante = scanner.nextLine();
+                PartidasDAO dao = new PartidasDAO();
+                Partida partida = dao.buscarPorNomesDosTimes(nomeCasa, nomeVisitante).getFirst();
+                if (partida != null) {
+                    dao.deletar(partida.getId());
+                    System.out.println("Partida excluída com sucesso!");
+                } else {
+                    System.out.println("Partida não encontrada.");
+                }
+            }
+            default -> System.out.println("Opção inválida.");
+        }
+    }
+
+
 
 }
