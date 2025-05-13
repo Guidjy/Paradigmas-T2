@@ -1,20 +1,104 @@
 import java.sql.*;
-
+import java.util.ArrayList;
+import java.util.List;
 
 public class TimesDAO {
 
     public void inserir(Time time) throws SQLException {
-        // abre uma conexão JDBC com o servidor local
-        Connection conexãoJDBC = Conexoes.getConexao();
-        // cria uma classe de statement
-        PreparedStatement SQLstatement = conexãoJDBC.prepareStatement("INSERT INTO times (nome, estadio, cidade, data_de_fundacao, n_jogadores) VALUES (?, ?, ?, ?, ?)");
-        // preenche os valores do statement
-        SQLstatement.setString(1, time.getNome());
-        SQLstatement.setString(2, time.getEstadio());
-        SQLstatement.setString(3, time.getCidade());
-        SQLstatement.setDate(4, time.getDataDeFundacao());
-        SQLstatement.setInt(5, time.getnJogadores());
-        // executa o statement
-        SQLstatement.executeUpdate();
+        Connection conexao = Conexoes.getConexao();
+        PreparedStatement stmt = conexao.prepareStatement(
+                "INSERT INTO times (nome, estadio, cidade, data_de_fundacao, n_jogadores) VALUES (?, ?, ?, ?, ?)"
+        );
+        stmt.setString(1, time.getNome());
+        stmt.setString(2, time.getEstadio());
+        stmt.setString(3, time.getCidade());
+        stmt.setDate(4, time.getDataDeFundacao());
+        stmt.setInt(5, time.getnJogadores());
+        stmt.executeUpdate();
+    }
+
+    public Time buscarPorId(int id) throws SQLException {
+        Connection conexao = Conexoes.getConexao();
+        PreparedStatement stmt = conexao.prepareStatement("SELECT * FROM times WHERE id = ?");
+        stmt.setInt(1, id);
+        ResultSet rs = stmt.executeQuery();
+
+        if (rs.next()) {
+            Time time = new Time(
+                    rs.getString("nome"),
+                    rs.getString("estadio"),
+                    rs.getString("cidade"),
+                    rs.getDate("data_de_fundacao")
+            );
+            time.setId(rs.getInt("id"));
+            time.setnJogadores(rs.getInt("n_jogadores"));
+            return time;
+        }
+        return null;
+    }
+
+    public List<Time> buscarPorNome(String nome) throws SQLException {
+        Connection conexao = Conexoes.getConexao();
+        PreparedStatement stmt = conexao.prepareStatement(
+                "SELECT * FROM times WHERE nome ILIKE ?"
+        );
+        stmt.setString(1, "%" + nome + "%");
+        ResultSet rs = stmt.executeQuery();
+
+        List<Time> lista = new ArrayList<>();
+        while (rs.next()) {
+            Time time = new Time(
+                    rs.getString("nome"),
+                    rs.getString("estadio"),
+                    rs.getString("cidade"),
+                    rs.getDate("data_de_fundacao")
+            );
+            time.setId(rs.getInt("id"));
+            time.setnJogadores(rs.getInt("n_jogadores"));
+            lista.add(time);
+        }
+        return lista;
+    }
+
+
+    public List<Time> buscarTodos() throws SQLException {
+        Connection conexao = Conexoes.getConexao();
+        Statement stmt = conexao.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT * FROM times");
+
+        List<Time> lista = new ArrayList<>();
+        while (rs.next()) {
+            Time time = new Time(
+                    rs.getString("nome"),
+                    rs.getString("estadio"),
+                    rs.getString("cidade"),
+                    rs.getDate("data_de_fundacao")
+            );
+            time.setId(rs.getInt("id"));
+            time.setnJogadores(rs.getInt("n_jogadores"));
+            lista.add(time);
+        }
+        return lista;
+    }
+
+    public void atualizar(Time time) throws SQLException {
+        Connection conexao = Conexoes.getConexao();
+        PreparedStatement stmt = conexao.prepareStatement(
+                "UPDATE times SET nome = ?, estadio = ?, cidade = ?, data_de_fundacao = ?, n_jogadores = ? WHERE id = ?"
+        );
+        stmt.setString(1, time.getNome());
+        stmt.setString(2, time.getEstadio());
+        stmt.setString(3, time.getCidade());
+        stmt.setDate(4, time.getDataDeFundacao());
+        stmt.setInt(5, time.getnJogadores());
+        stmt.setInt(6, time.getId());
+        stmt.executeUpdate();
+    }
+
+    public void deletar(int id) throws SQLException {
+        Connection conexao = Conexoes.getConexao();
+        PreparedStatement stmt = conexao.prepareStatement("DELETE FROM times WHERE id = ?");
+        stmt.setInt(1, id);
+        stmt.executeUpdate();
     }
 }
