@@ -28,6 +28,51 @@ public class TreinadoresDAO {
         return null;
     }
 
+    public List<Treinador> buscarPorNome(String nome) throws SQLException {
+        Connection conexao = Conexoes.getConexao();
+        PreparedStatement stmt = conexao.prepareStatement(
+                "SELECT * FROM treinadores WHERE nome ILIKE ?"
+        );
+        stmt.setString(1, "%" + nome + "%");
+
+        ResultSet rs = stmt.executeQuery();
+        List<Treinador> lista = new ArrayList<>();
+
+        while (rs.next()) {
+            Treinador t = new Treinador(rs.getString("nome"), rs.getInt("time"));
+            t.setId(rs.getInt("id"));
+            lista.add(t);
+        }
+
+        return lista;
+    }
+
+    public List<Treinador> buscarPorNomeDoTime(String nomeDoTime) throws SQLException {
+        Connection conexao = Conexoes.getConexao();
+
+        String sql = """
+        SELECT tr.*
+        FROM treinadores tr
+        JOIN times t ON tr."time" = t.id
+        WHERE t.nome LIKE ?
+    """;
+
+        PreparedStatement stmt = conexao.prepareStatement(sql);
+        stmt.setString(1, "%" + nomeDoTime + "%");
+
+        ResultSet rs = stmt.executeQuery();
+        List<Treinador> lista = new ArrayList<>();
+
+        while (rs.next()) {
+            Treinador t = new Treinador(rs.getString("nome"), rs.getInt("time"));
+            t.setId(rs.getInt("id"));
+            lista.add(t);
+        }
+
+        return lista;
+    }
+
+
     public List<Treinador> buscarTodos() throws SQLException {
         Connection conexao = Conexoes.getConexao();
         Statement stmt = conexao.createStatement();
