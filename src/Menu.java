@@ -26,7 +26,7 @@ public class Menu {
                     case 1 -> submenuCadastro();
                     case 2 -> submenuAlterar();
                     case 3 -> submenuExcluir();
-                    case 4 -> System.out.println("Função de busca ainda não implementada.");
+                    case 4 -> submenuBuscar();
                     case 5 -> verClassificacao();
                     case 6 -> {
                         System.out.println("Saindo...");
@@ -299,6 +299,54 @@ public class Menu {
                 } else {
                     System.out.println("Partida não encontrada.");
                 }
+            }
+            default -> System.out.println("Opção inválida.");
+        }
+    }
+
+    private static void submenuBuscar() throws SQLException {
+        System.out.println("\n--- Submenu Buscar ---");
+        System.out.println("1. Buscar time");
+        System.out.println("2. Buscar treinador");
+        System.out.println("3. Buscar jogador");
+        System.out.println("4. Buscar partida");
+        System.out.print("Escolha uma opção: ");
+        int opcao = scanner.nextInt();
+        scanner.nextLine();
+
+        switch (opcao) {
+            case 1 -> {
+                System.out.print("Nome do time: ");
+                String nome = scanner.nextLine();
+                new TimesDAO().buscarPorNome(nome).forEach(System.out::println);
+            }
+            case 2 -> {
+                System.out.print("Nome do treinador: ");
+                String nome = scanner.nextLine();
+                new TreinadoresDAO().buscarPorNome(nome).forEach(System.out::println);
+            }
+            case 3 -> {
+                System.out.println("Buscar por [1]nome ou [2]time?");
+                int escolha = scanner.nextInt(); scanner.nextLine();
+                if (escolha == 1) {
+                    System.out.print("Nome do jogador: ");
+                    String nome = scanner.nextLine();
+                    new JogadoresDAO().buscarPorNome(nome).forEach(System.out::println);
+                } else {
+                    System.out.print("Time do jogador: ");
+                    String time = scanner.nextLine();
+                    new JogadoresDAO().buscarPorNome(time).forEach(System.out::println);
+                }
+            }
+            case 4 -> {
+                System.out.print("Nome do time da casa: ");
+                String casa = scanner.nextLine();
+                System.out.print("Nome do time visitante: ");
+                String visitante = scanner.nextLine();
+                PartidasDAO dao = new PartidasDAO();
+                Partida partida = dao.buscarPorNomesDosTimes(casa, visitante).getFirst();
+                if (partida != null) System.out.println(partida);
+                else System.out.println("Partida não encontrada.");
             }
             default -> System.out.println("Opção inválida.");
         }
