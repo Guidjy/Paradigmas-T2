@@ -37,6 +37,102 @@ public class PartidasDAO {
         return null;
     }
 
+    public List<Partida> buscarPorNomeTimeCasa(String nomeTimeCasa) throws SQLException {
+        Connection conexao = Conexoes.getConexao();
+
+        String sql = """
+        SELECT p.*
+        FROM partidas p
+        JOIN times t ON p.casa = t.id
+        WHERE t.nome ILIKE ?
+    """;
+
+        PreparedStatement stmt = conexao.prepareStatement(sql);
+        stmt.setString(1, "%" + nomeTimeCasa + "%");
+
+        ResultSet rs = stmt.executeQuery();
+        List<Partida> lista = new ArrayList<>();
+
+        while (rs.next()) {
+            Partida p = new Partida(
+                    rs.getInt("casa"),
+                    rs.getInt("visitante"),
+                    rs.getInt("gols_casa"),
+                    rs.getInt("gols_visitante"),
+                    rs.getInt("numero_da_rodada")
+            );
+            p.setId(rs.getInt("id"));
+            lista.add(p);
+        }
+
+        return lista;
+    }
+
+    public List<Partida> buscarPorNomeTimeVisitante(String nomeTimeVisitante) throws SQLException {
+        Connection conexao = Conexoes.getConexao();
+
+        String sql = """
+        SELECT p.*
+        FROM partidas p
+        JOIN times t ON p.visitante = t.id
+        WHERE t.nome ILIKE ?
+    """;
+
+        PreparedStatement stmt = conexao.prepareStatement(sql);
+        stmt.setString(1, "%" + nomeTimeVisitante + "%");
+
+        ResultSet rs = stmt.executeQuery();
+        List<Partida> lista = new ArrayList<>();
+
+        while (rs.next()) {
+            Partida p = new Partida(
+                    rs.getInt("casa"),
+                    rs.getInt("visitante"),
+                    rs.getInt("gols_casa"),
+                    rs.getInt("gols_visitante"),
+                    rs.getInt("numero_da_rodada")
+            );
+            p.setId(rs.getInt("id"));
+            lista.add(p);
+        }
+
+        return lista;
+    }
+
+    public List<Partida> buscarPorNomesDosTimes(String nomeTimeCasa, String nomeTimeVisitante) throws SQLException {
+        Connection conexao = Conexoes.getConexao();
+
+        String sql = """
+        SELECT p.*
+        FROM partidas p
+        JOIN times t1 ON p.casa = t1.id
+        JOIN times t2 ON p.visitante = t2.id
+        WHERE t1.nome ILIKE ? AND t2.nome ILIKE ?
+    """;
+
+        PreparedStatement stmt = conexao.prepareStatement(sql);
+        stmt.setString(1, "%" + nomeTimeCasa + "%");
+        stmt.setString(2, "%" + nomeTimeVisitante + "%");
+
+        ResultSet rs = stmt.executeQuery();
+        List<Partida> lista = new ArrayList<>();
+
+        while (rs.next()) {
+            Partida p = new Partida(
+                    rs.getInt("casa"),
+                    rs.getInt("visitante"),
+                    rs.getInt("gols_casa"),
+                    rs.getInt("gols_visitante"),
+                    rs.getInt("numero_da_rodada")
+            );
+            p.setId(rs.getInt("id"));
+            lista.add(p);
+        }
+
+        return lista;
+    }
+
+
     public List<Partida> buscarTodas() throws SQLException {
         Connection conexao = Conexoes.getConexao();
         Statement stmt = conexao.createStatement();
