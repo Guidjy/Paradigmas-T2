@@ -84,8 +84,10 @@ public class Menu {
     private static void cadastrarTreinador() throws SQLException {
         System.out.print("Nome do treinador: ");
         String nome = scanner.nextLine();
-        System.out.print("ID do time: ");
-        int timeId = scanner.nextInt();
+        System.out.print("Nome do time: ");
+        String nomeTime = scanner.nextLine();
+        TimesDAO dao = new TimesDAO();
+        int timeId = dao.buscarPorNome(nomeTime).getFirst().getId();
 
         Treinador treinador = new Treinador(nome, timeId);
         new TreinadoresDAO().inserir(treinador);
@@ -101,8 +103,11 @@ public class Menu {
         int idade = scanner.nextInt();
         System.out.print("Número da camisa: ");
         int numero = scanner.nextInt();
-        System.out.print("ID do time: ");
-        int timeId = scanner.nextInt();
+        scanner.nextLine();
+        System.out.print("Nome do time: ");
+        String nomeTime = scanner.nextLine();
+        TimesDAO dao = new TimesDAO();
+        int timeId = dao.buscarPorNome(nomeTime).getFirst().getId();
 
         Jogador jogador = new Jogador(nome, posicao, idade, numero, timeId);
         new JogadoresDAO().inserir(jogador);
@@ -110,10 +115,13 @@ public class Menu {
     }
 
     private static void cadastrarPartida() throws SQLException {
-        System.out.print("ID do time da casa: ");
-        int casa = scanner.nextInt();
-        System.out.print("ID do time visitante: ");
-        int visitante = scanner.nextInt();
+        System.out.print("Nome do time da casa: ");
+        String nomeTime = scanner.nextLine();
+        TimesDAO dao = new TimesDAO();
+        int casa = dao.buscarPorNome(nomeTime).getFirst().getId();
+        System.out.print("Nome do time visitante: ");
+        nomeTime = scanner.nextLine();
+        int visitante = dao.buscarPorNome(nomeTime).getFirst().getId();
         System.out.print("Gols do time da casa: ");
         int golsCasa = scanner.nextInt();
         System.out.print("Gols do visitante: ");
