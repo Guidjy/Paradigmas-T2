@@ -118,7 +118,7 @@ public class JogadoresDAO {
     public void atualizar(Jogador jogador) throws SQLException {
         Connection conexao = Conexoes.getConexao();
         PreparedStatement stmt = conexao.prepareStatement(
-                "UPDATE jogadores SET nome = ?, posicao = ?, idade = ?, numero_camisa = ?, time_id = ? WHERE id = ?"
+                "UPDATE jogadores SET nome = ?, posicao = ?, idade = ?, numero = ?, time = ? WHERE id = ?"
         );
         stmt.setString(1, jogador.getNome());
         stmt.setString(2, jogador.getPosicao());

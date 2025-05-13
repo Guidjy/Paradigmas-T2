@@ -23,7 +23,7 @@ public class Menu {
             try {
                 switch (opcao) {
                     case 1 -> submenuCadastro();
-                    case 2 -> System.out.println("Função de alteração ainda não implementada.");
+                    case 2 -> submenuAlterar();
                     case 3 -> System.out.println("Função de exclusão ainda não implementada.");
                     case 4 -> System.out.println("Função de busca ainda não implementada.");
                     case 5 -> verClassificacao();
@@ -143,4 +143,96 @@ public class Menu {
                         System.out.println(entry.getKey() + ": " + entry.getValue() + " pts")
                 );
     }
+
+    private static void submenuAlterar() throws SQLException {
+        System.out.println("\n--- Submenu Alterar ---");
+        System.out.println("1. Alterar time");
+        System.out.println("2. Alterar treinador");
+        System.out.println("3. Alterar jogador");
+        System.out.println("4. Alterar partida");
+        System.out.print("Escolha uma opção: ");
+        int opcao = scanner.nextInt();
+        scanner.nextLine();
+
+        switch (opcao) {
+            case 1 -> {
+                System.out.print("ID do time: ");
+                int id = scanner.nextInt(); scanner.nextLine();
+                System.out.print("Novo nome: ");
+                String nome = scanner.nextLine();
+                System.out.print("Novo estádio: ");
+                String estadio = scanner.nextLine();
+                System.out.print("Nova cidade: ");
+                String cidade = scanner.nextLine();
+                System.out.print("Nova data de fundação (yyyy-mm-dd): ");
+                Date data = Date.valueOf(scanner.nextLine());
+                System.out.print("Número de jogadores: ");
+                int nJogadores = scanner.nextInt();
+
+                Time time = new Time(nome, estadio, cidade, data);
+                time.setId(id);
+                time.setnJogadores(nJogadores);
+                new TimesDAO().atualizar(time);
+                System.out.println("Time atualizado com sucesso!");
+            }
+            case 2 -> {
+                System.out.print("ID do treinador: ");
+                int id = scanner.nextInt(); scanner.nextLine();
+                System.out.print("Novo nome: ");
+                String nome = scanner.nextLine();
+                System.out.print("Nome do novo time: ");
+                String nomeTime = scanner.nextLine();
+                int timeId = new TimesDAO().buscarPorNome(nomeTime).getFirst().getId();
+
+                Treinador t = new Treinador(nome, timeId);
+                t.setId(id);
+                new TreinadoresDAO().atualizar(t);
+                System.out.println("Treinador atualizado com sucesso!");
+            }
+            case 3 -> {
+                System.out.print("ID do jogador: ");
+                int id = scanner.nextInt(); scanner.nextLine();
+                System.out.print("Novo nome: ");
+                String nome = scanner.nextLine();
+                System.out.print("Nova posição: ");
+                String posicao = scanner.nextLine();
+                System.out.print("Nova idade: ");
+                int idade = scanner.nextInt();
+                System.out.print("Novo número da camisa: ");
+                int numero = scanner.nextInt();
+                scanner.nextLine();
+                System.out.print("Nome do novo time: ");
+                String nomeTime = scanner.nextLine();
+                int timeId = new TimesDAO().buscarPorNome(nomeTime).getFirst().getId();
+
+                Jogador j = new Jogador(nome, posicao, idade, numero, timeId);
+                j.setId(id);
+                new JogadoresDAO().atualizar(j);
+                System.out.println("Jogador atualizado com sucesso!");
+            }
+            case 4 -> {
+                System.out.print("ID da partida: ");
+                int id = scanner.nextInt(); scanner.nextLine();
+                System.out.print("Nome do time da casa: ");
+                String nomeCasa = scanner.nextLine();
+                int casaId = new TimesDAO().buscarPorNome(nomeCasa).getFirst().getId();
+                System.out.print("Nome do visitante: ");
+                String nomeFora = scanner.nextLine();
+                int visitanteId = new TimesDAO().buscarPorNome(nomeFora).getFirst().getId();
+                System.out.print("Gols da casa: ");
+                int golsCasa = scanner.nextInt();
+                System.out.print("Gols do visitante: ");
+                int golsFora = scanner.nextInt();
+                System.out.print("Número da rodada: ");
+                int rodada = scanner.nextInt();
+
+                Partida p = new Partida(casaId, visitanteId, golsCasa, golsFora, rodada);
+                p.setId(id);
+                new PartidasDAO().atualizar(p);
+                System.out.println("Partida atualizada com sucesso!");
+            }
+            default -> System.out.println("Opção inválida.");
+        }
+    }
+
 }
