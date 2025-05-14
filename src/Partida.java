@@ -1,3 +1,4 @@
+import java.sql.SQLException;
 
 public class Partida {
     private int id;
@@ -34,4 +35,12 @@ public class Partida {
 
     public int getNumero_rodada() { return numero_rodada; }
     public void setNumero_rodada(int numero_rodada) { this.numero_rodada = numero_rodada; }
+
+    public void printDados() throws SQLException {
+        System.out.println("- Time de casa: " + new TimesDAO().buscarPorId(timeCasaId).getNome());
+        System.out.println("- Time de fora: " + new TimesDAO().buscarPorId(timeForaId).getNome());
+        System.out.println("- Gols de casa: " + this.golsCasa);
+        System.out.println("- Gols de dora: " + this.golsFora);
+        System.out.println("- Número da rodada: " + this.numero_rodada);
+    }
 }

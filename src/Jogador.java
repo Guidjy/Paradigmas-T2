@@ -1,3 +1,5 @@
+import java.sql.SQLException;
+
 public class Jogador {
     private int id;
     private String nome;
@@ -23,4 +25,12 @@ public class Jogador {
     public int getIdade() { return idade; }
     public int getNumeroCamisa() { return numeroCamisa; }
     public int getTimeId() { return timeId; }
+
+    public void printDados() throws SQLException {
+        System.out.println("- Nome: " + this.nome);
+        System.out.println("- Posição: " + this.posicao);
+        System.out.println("- Idade: " + this.idade);
+        System.out.println("- Número da camisa: " + this.numeroCamisa);
+        System.out.println("- Time: " + new TimesDAO().buscarPorId(this.timeId).getNome());
+    }
 }
