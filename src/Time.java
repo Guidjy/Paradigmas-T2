@@ -35,4 +35,12 @@ public class Time {
         this.setDataDeFundacao(dataDeFundacao);
         this.setnJogadores(0);
     }
+
+    public void printDados() {
+        System.out.println("- Nome: " + this.nome);
+        System.out.println("- Estádio: " + this.estadio);
+        System.out.println("- Cidade: " + this.cidade);
+        System.out.println("- Data de fundação: " + this.dataDeFundacao);
+        System.out.println("- número de jogadores: " + this.nJogadores);
+    }
 }

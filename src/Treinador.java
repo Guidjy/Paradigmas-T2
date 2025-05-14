@@ -1,3 +1,4 @@
+import java.sql.SQLException;
 
 public class Treinador {
     private int id;
@@ -19,4 +20,9 @@ public class Treinador {
 
     public int getTimeId() { return timeId; }
     public void setTimeId(int timeId) { this.timeId = timeId; }
+
+    public void printDados() throws SQLException {
+        System.out.println("- Nome: " + this.nome);
+        System.out.println("- Time: " + new TimesDAO().buscarPorId(this.timeId).getNome());
+    }
 }

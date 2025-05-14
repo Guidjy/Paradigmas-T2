@@ -316,26 +316,48 @@ public class Menu {
 
         switch (opcao) {
             case 1 -> {
-                System.out.print("Nome do time: ");
+                System.out.print("> Nome do time: ");
                 String nome = scanner.nextLine();
-                new TimesDAO().buscarPorNome(nome).forEach(System.out::println);
+                TimesDAO dao = new TimesDAO();
+                List<Time> times = dao.buscarPorNome(nome);
+                for (int i = 0; i < times.size(); i++) {
+                    Time t = times.get(i);
+                    System.out.println("-=-=-=-=-=-=-=-=-=-=-");
+                    t.printDados();
+                    System.out.println("-=-=-=-=-=-=-=-=-=-=-");
+                }
             }
             case 2 -> {
-                System.out.print("Nome do treinador: ");
+                System.out.print("> Nome do treinador: ");
                 String nome = scanner.nextLine();
-                new TreinadoresDAO().buscarPorNome(nome).forEach(System.out::println);
+                TreinadoresDAO dao = new TreinadoresDAO();
+                List<Treinador> treinadores = dao.buscarPorNome(nome);
+                for (int i = 0; i < treinadores.size(); i++) {
+                    Treinador t = treinadores.get(i);
+                    System.out.println("-=-=-=-=-=-=-=-=-=-=-");
+                    t.printDados();
+                    System.out.println("-=-=-=-=-=-=-=-=-=-=-");
+                }
             }
             case 3 -> {
                 System.out.println("Buscar por [1]nome ou [2]time?");
                 int escolha = scanner.nextInt(); scanner.nextLine();
+                JogadoresDAO dao = new JogadoresDAO();
+                List<Jogador> jogadores;
                 if (escolha == 1) {
                     System.out.print("Nome do jogador: ");
                     String nome = scanner.nextLine();
-                    new JogadoresDAO().buscarPorNome(nome).forEach(System.out::println);
+                    jogadores = dao.buscarPorNome(nome);
                 } else {
                     System.out.print("Time do jogador: ");
                     String time = scanner.nextLine();
-                    new JogadoresDAO().buscarPorNome(time).forEach(System.out::println);
+                    jogadores = dao.buscarPorNomeDoTime(time);
+                }
+                for (int i = 0; i < jogadores.size(); i++) {
+                    Jogador j = jogadores.get(i);
+                    System.out.println("-=-=-=-=-=-=-=-=-=-=-");
+                    j.printDados();
+                    System.out.println("-=-=-=-=-=-=-=-=-=-=-");
                 }
             }
             case 4 -> {
@@ -344,9 +366,14 @@ public class Menu {
                 System.out.print("Nome do time visitante: ");
                 String visitante = scanner.nextLine();
                 PartidasDAO dao = new PartidasDAO();
-                Partida partida = dao.buscarPorNomesDosTimes(casa, visitante).getFirst();
-                if (partida != null) System.out.println(partida);
-                else System.out.println("Partida não encontrada.");
+                List<Partida> partidas = dao.buscarPorNomesDosTimes(casa, visitante);
+                for (int i = 0; i < partidas.size(); i++) {
+                    Partida partida = partidas.get(i);
+                    System.out.println("-=-=-=-=-=-=-=-=-=-=-");
+                    partida.printDados();
+                    System.out.println("-=-=-=-=-=-=-=-=-=-=-");
+                }
+
             }
             default -> System.out.println("Opção inválida.");
         }
