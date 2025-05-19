@@ -1,5 +1,5 @@
 import java.sql.Date;
-
+import java.util.ArrayList;
 
 public class Time {
     private int id;
@@ -8,6 +8,16 @@ public class Time {
     private String cidade;
     private Date dataDeFundacao;
     private int nJogadores;
+    private ArrayList<Jogador> jogadores;
+
+    public void addJogador(Jogador jogador) {
+        if (jogadores == null) {
+            jogadores = new ArrayList<>();
+        }
+        jogadores.add(jogador);
+    }
+
+
 
     // getters e setters
     public int getId() { return id; }
@@ -25,7 +35,7 @@ public class Time {
     public Date getDataDeFundacao() { return dataDeFundacao; }
     public void setDataDeFundacao(Date dataDeFundacao) { this.dataDeFundacao = dataDeFundacao; }
 
-    public int getnJogadores() { return nJogadores; }
+    public int getnJogadores() { return jogadores.size(); }
     public void setnJogadores(int nJogadores) { this.nJogadores = nJogadores; }
 
     public Time(String nome, String estadio, String cidade, Date dataDeFundacao) {
@@ -34,6 +44,7 @@ public class Time {
         this.setCidade(cidade);
         this.setDataDeFundacao(dataDeFundacao);
         this.setnJogadores(0);
+        this.jogadores = new ArrayList<>();
     }
 
     public void printDados() {

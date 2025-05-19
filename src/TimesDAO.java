@@ -32,6 +32,14 @@ public class TimesDAO {
             );
             time.setId(rs.getInt("id"));
             time.setnJogadores(rs.getInt("n_jogadores"));
+
+            // Carregar jogadores
+            JogadoresDAO jogadoresDAO = new JogadoresDAO();
+            List<Jogador> jogadores = jogadoresDAO.buscarPorNomeDoTime(time.getNome());
+            for (Jogador jogador : jogadores) {
+                time.addJogador(jogador);
+            }
+
             return time;
         }
         return null;
