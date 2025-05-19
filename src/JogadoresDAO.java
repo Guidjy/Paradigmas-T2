@@ -6,6 +6,14 @@ public class JogadoresDAO {
 
     public void inserir(Jogador jogador) throws SQLException {
         Connection conexao = Conexoes.getConexao();
+
+        // verifica se o time ja tem 25 jogadores
+        TimesDAO tdao = new TimesDAO();
+        Time timeDoJogador = tdao.buscarPorId(jogador.getTimeId());
+        if (timeDoJogador.getnJogadores() >= 25) {
+            System.out.println("Time está cheio. Não se pode mais adicionar jogadores");
+        }
+
         PreparedStatement stmt = conexao.prepareStatement(
                 "INSERT INTO jogadores (nome, posicao, idade, numero, time) VALUES (?, ?, ?, ?, ?)"
         );
@@ -15,6 +23,10 @@ public class JogadoresDAO {
         stmt.setInt(4, jogador.getNumeroCamisa());
         stmt.setInt(5, jogador.getTimeId());
         stmt.executeUpdate();
+
+        // aumenta o número de jogadores do time
+        timeDoJogador.setnJogadores(timeDoJogador.getnJogadores() + 1);
+        tdao.atualizar(timeDoJogador);
     }
 
     public Jogador buscarPorId(int id) throws SQLException {
@@ -131,6 +143,14 @@ public class JogadoresDAO {
 
     public void deletar(int id) throws SQLException {
         Connection conexao = Conexoes.getConexao();
+
+        JogadoresDAO jdao = new JogadoresDAO();
+        TimesDAO tdao = new TimesDAO();
+        Jogador jogador = jdao.buscarPorId(id);
+        Time timeDoJogador = tdao.buscarPorId(jogador.getTimeId());
+        timeDoJogador.setnJogadores(timeDoJogador.getnJogadores() - 1);
+        tdao.atualizar(timeDoJogador);
+
         PreparedStatement stmt = conexao.prepareStatement("DELETE FROM jogadores WHERE id = ?");
         stmt.setInt(1, id);
         stmt.executeUpdate();
